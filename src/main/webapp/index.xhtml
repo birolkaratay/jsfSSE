@@ -9,37 +9,35 @@
         <title>SSE Web Test</title>
     </h:head>
     <h:body>
-        <f:view>
-            <h:form>   
+        <f:view id="viewId">
+            <h:form id="chatForm">   
                 <p:growl id="messages" showDetail="true" autoUpdate="true"/>
-                <h:panelGrid columns="2">
-                    <h:outputText value="Kullanıcı Adı:"/>
-                    <p:inputText id="kullAdi" value="#{mesajView.kullaniciMesaji.kullanici}"/>
-                    <h:outputText value="Mesaj:"/>
-                    <p:inputText id="kullaniciMesaji" value="#{mesajView.kullaniciMesaji.icerik}"/>
+                <h:panelGrid columns="2" id="chatPanel">
+                    <h:outputText value="User Name:"/>
+                    <p:inputText id="userName" value="#{messageView.userMessage.userName}"/>
+                    <h:outputText value="Message:"/>
+                    <p:inputText id="userMessageText" value="#{messageView.userMessage.messageText}"/>
                     <h:outputText value=""/>
-                    <p:commandButton  value="Mesajı Yolla" action="#{mesajView.kullaniciMesajiYaz()}"/>
+                    <p:commandButton id="sendButton"  value="Send Message" action="#{messageView.sendMessage()}"/>
                 </h:panelGrid>    
             </h:form>
-            <div id="kanal"></div>
+            <p:separator/>
+            <div id="sseChannel"></div>
         </f:view>
-
 
         <script type="text/javascript" language="JavaScript">
             //<![CDATA[      
             if (typeof (EventSource) !== "undefined") {
                 var source = new EventSource("http://localhost:8080/jsfSSE/SseServlet");
                 source.onmessage = function(event) {
-                    document.getElementById("kanal").innerHTML += event.data
-                    +"<br/>";
+                    document.getElementById("sseChannel").innerHTML += event.data
+                            + "<br/>";
                 };
             } else {
-                document.getElementById("kanal").innerHTML = "Sorry, your browser does not support server-sent events...";
+                document.getElementById("sseChannel").innerHTML = "Sorry, your browser does not support server-sent events...";
             }
-             //]]>
+            //]]>
         </script>
-
-
     </h:body>
 
 </html>

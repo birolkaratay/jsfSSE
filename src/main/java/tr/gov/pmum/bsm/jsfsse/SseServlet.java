@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package tr.gov.pmum.bsm.jsfsse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,18 +11,38 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author birol
+ * @author birol karatay
  */
 @WebServlet(name = "SseServlet", urlPatterns = {"/SseServlet"})
 public class SseServlet extends HttpServlet {
 
     
     
+    /**
+     * Do nothing
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
+    /**
+     * Every 1/20 second Thread check Queues for new Events
+     * If there is a new Event it will be sent to the client. 
+     * 
+     * A counter count sent events ids.
+     * 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
+    @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         // Besides "text/event-stream;", Chrome also needs charset, otherwise
@@ -38,16 +53,16 @@ public class SseServlet extends HttpServlet {
         response.setHeader("Connection", "keep-alive");
 
         PrintWriter out = response.getWriter();
-        Integer sonGonderilenMesajId = new Integer(MesajListener.checkMesajIdCounter().intValue());
+        Integer lastSentMessageId = new Integer(Constant.getCurrentValue().intValue());
          
         while (true) {
-            List<Mesaj> gonderilecekler = MesajListener.mesajOku(sonGonderilenMesajId);
-            for (Mesaj mesaj : gonderilecekler) {
-            out.print("id: " + "kanal" + "\n");
-            out.print("data: " +new Date(System.currentTimeMillis()).toString() + 
-                             " :" + mesaj.getKullanici() + " Dedi: " + mesaj.getIcerik() + "\n\n");
+            List<Message> lastEvents = Queues.readLastEvents(lastSentMessageId);
+            for (Message message : lastEvents) {
+            out.print("id: " + "sseChannel" + "\n");
+            out.print("data: (" + System.currentTimeMillis() + 
+                             ") " + message.getUserName() + " Said : " + message.getMessageText() + "\n\n");
             out.flush();    
-            sonGonderilenMesajId = mesaj.getId();
+            lastSentMessageId = message.getId();
             }
             
             // out.close(); //Do not close the writer!
