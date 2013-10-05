@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>SSE Web Test</title>
+    </h:head>
+    <h:body>
+        <f:view>
+            <h:form>   
+                <p:growl id="messages" showDetail="true" autoUpdate="true"/>
+                <h:panelGrid columns="2">
+                    <h:outputText value="Kullanıcı Adı:"/>
+                    <p:inputText id="kullAdi" value="#{mesajView.kullaniciMesaji.kullanici}"/>
+                    <h:outputText value="Mesaj:"/>
+                    <p:inputText id="kullaniciMesaji" value="#{mesajView.kullaniciMesaji.icerik}"/>
+                    <h:outputText value=""/>
+                    <p:commandButton  value="Mesajı Yolla" action="#{mesajView.kullaniciMesajiYaz()}"/>
+                </h:panelGrid>    
+            </h:form>
+            <div id="kanal"></div>
+        </f:view>
+
+
+        <script type="text/javascript" language="JavaScript">
+            //<![CDATA[      
+            if (typeof (EventSource) !== "undefined") {
+                var source = new EventSource("http://localhost:8080/jsfSSE/SseServlet");
+                source.onmessage = function(event) {
+                    document.getElementById("kanal").innerHTML += event.data
+                    +"<br/>";
+                };
+            } else {
+                document.getElementById("kanal").innerHTML = "Sorry, your browser does not support server-sent events...";
+            }
+             //]]>
+        </script>
+
+
+    </h:body>
+
+</html>
+

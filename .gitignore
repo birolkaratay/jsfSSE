@@ -1,0 +1,8 @@
+*/target/*
+target/*
+.project
+.classpath
+.settings/*
+.faces-config.xml.jsfdia
+/target
+nb-configuration.xml
