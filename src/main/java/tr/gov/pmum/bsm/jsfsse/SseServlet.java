@@ -2,6 +2,8 @@ package tr.gov.pmum.bsm.jsfsse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "SseServlet", urlPatterns = {"/SseServlet"})
 public class SseServlet extends HttpServlet {
 
-    
+    DateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
     
     /**
      * Do nothing
@@ -59,7 +61,7 @@ public class SseServlet extends HttpServlet {
             List<Message> lastEvents = Queues.readLastEvents(lastSentMessageId);
             for (Message message : lastEvents) {
             out.print("id: " + "sseChannel" + "\n");
-            out.print("data: (" + System.currentTimeMillis() + 
+            out.print("data: (" + df.format(System.currentTimeMillis()) + 
                              ") " + message.getUserName() + " Said : " + message.getMessageText() + "\n\n");
             out.flush();    
             lastSentMessageId = message.getId();

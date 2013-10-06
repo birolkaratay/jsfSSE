@@ -20,6 +20,7 @@ public class Queues implements Serializable {
      * User chat messages store
      */
     private static ConcurrentMap<Integer, Message> chatMessageQueue = new ConcurrentHashMap<Integer, Message>();
+    
     /**
      * Default Constructor
      */
