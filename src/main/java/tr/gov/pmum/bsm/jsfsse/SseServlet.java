@@ -60,9 +60,11 @@ public class SseServlet extends HttpServlet {
         while (true) {
             List<Message> lastEvents = Queues.readLastEvents(lastSentMessageId);
             for (Message message : lastEvents) {
-            out.print("id: " + "sseChannel" + "\n");
+            out.print("event: " + "birol" + "\n");
+            out.print("id: " + lastSentMessageId.toString() + "\n");
             out.print("data: (" + df.format(System.currentTimeMillis()) + 
                              ") " + message.getUserName() + " Said : " + message.getMessageText() + "\n\n");
+            
             out.flush();    
             lastSentMessageId = message.getId();
             }

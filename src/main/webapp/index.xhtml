@@ -28,14 +28,20 @@
         <script type="text/javascript" language="JavaScript">
             //<![CDATA[      
             if (typeof (EventSource) !== "undefined") {
-                var source = new EventSource("http://localhost:8080/jsfSSE/SseServlet");
-                source.onmessage = function(event) {
-                    document.getElementById("sseChannel").innerHTML += event.data
+                var source = new EventSource("http://10.200.11.185:8181/jsfSSE/SseServlet");
+                source.addEventListener("birol", function(event) {
+                var data = event.data;
+                var origin = event.origin;
+                var lastEventId = event.lastEventId;
+                document.getElementById("sseChannel").innerHTML += "last: "+lastEventId+"/event: "+origin +"/"+ data
                             + "<br/>";
-                };
+                }, false);
             } else {
                 document.getElementById("sseChannel").innerHTML = "Sorry, your browser does not support server-sent events...";
             }
+            
+            
+            
             //]]>
         </script>
     </h:body>
